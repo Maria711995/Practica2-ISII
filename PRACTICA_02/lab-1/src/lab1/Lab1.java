@@ -37,6 +37,8 @@ public class Lab1 {
     private static PrintWriter pw = null;
     private static ArrayList<?> array = new ArrayList<>();
     private static float importeF;
+    private static int num_motos_reg;
+    private static int num_socios;
        
     public static void main(String[] args) throws ParseException {
         // TODO code application logic here
@@ -73,11 +75,12 @@ public class Lab1 {
         System.out.println("1. Registrar un nuevo miembro");
         System.out.println("2. Registrar una nueva motocicleta");
         System.out.println("3. Registrar una cesion ");
-        System.out.println("4. Incrementar otros gastos a una moto");
-        System.out.println("5. Listar en pantalla los miembros con motos en posesión ");
-        System.out.println("6. Listar todas las motos");
-        System.out.println("7. Listar todas las cesiones realizadas");
-        System.out.println("8. Salir");
+        System.out.println("4. Eliminar un miembro ");
+        System.out.println("5. Incrementar otros gastos a una moto");
+        System.out.println("6. Listar en pantalla los miembros con motos en posesión ");
+        System.out.println("7. Listar todas las motos");
+        System.out.println("8. Listar todas las cesiones realizadas");
+        System.out.println("9. Salir");
 
        do{
             
@@ -119,23 +122,49 @@ public class Lab1 {
                        else         
                           ces = insertar_cesion();                       
                 break;
-                case 4:        
+               case 4:
+                       // Si no hay socios registrados
+                       if(num_socios < 1)
+                       {
+                           System.out.println("Acción invalida. No existe ningún miembro.");
+                       }
+                       //* Si solo hay un miembro registrado y hay varias motos registradas *
+                       else if((num_socios == 1) && (num_motos_reg >= 1))
+                       {
+                               System.out.println("Acción invalida. Las motos no pueden quedarse");
+                               System.out.println("sin asignación.");
+                       }
+                       else // Hay suficientes miembros y motos para eliminar un miembro.
+                       {
+                          eliminar_miembro(); 
+                       }
+                      
+                break;
+                case 5:
+                       if(num_motos_reg >= 1)
+                       {
+                         m = insertar_importe_moto();
+                       }
+                       else
+                       {
+                           System.out.println("No se puede incrementar el importe porque actualmente ");
+                           System.out.println("no hay ninguna moto registrada.");
+                       }
+                   
+                break;
+                case 6:        
                     System.out.println("---Clientes registrados---\n");
                     mostrar_clientes(c.getArrayClientes());
                 break;
-                case 5:
+                case 7:
                     System.out.println("---Motos registradas---\n");
                     mostrar_Array(m.getArrayMotos());
                 break;
-                case 6:
-                    System.out.println("---Cesiones registradas---\n");
-                    mostrar_Array(ces.getArrayCesion());
-                break;
-                case 7:
-                    System.out.println("---Cesiones registradas---\n");
-                    mostrar_Array(ces.getArrayCesion());
-                break;
                 case 8:
+                    System.out.println("---Cesiones registradas---\n");
+                    mostrar_Array(ces.getArrayCesion());
+                break;
+                case 9:
                    salir(c,m,ces);
                 break;
                 default: //Si se introduce cualquier otro número que no esté entre el 1 y el 7:
@@ -154,8 +183,198 @@ public class Lab1 {
          }         
        
         }
-        while(opcion != 8);     
+        while(opcion != 9);     
         
+    }
+    /*************************************************************
+     * Eliminamos a un miembro.
+     * 
+     * @return      El cliente eliminado
+     */
+    public static Cliente eliminar_miembro()
+    {
+        Cliente c = new Cliente();
+        Moto m = new Moto();
+        //Cesion ces = new Cesion();
+        String n_miembroS;
+        int n_miembroI, miembro_selecI, idmotoc;
+        String miembro_selecS;
+        boolean existe, opcorrecta;
+        // Motos que posee el cliente que se va a borrar:
+        ArrayList<Integer> motos_cliente = new ArrayList<Integer>();
+        
+        System.out.println("---Miembros registrados---");
+        mostrar_clientes(c.getArrayClientes());
+        
+        do
+        {
+            do
+            {
+                System.out.println("Seleccione el miembro (id) que desea eliminar: ");
+                n_miembroS = teclado.next();    
+        
+                correcto = c.comprobarNumero(n_miembroS);
+            
+            }while(!correcto); // Repetimos mientras no se introduzca un número
+        
+            n_miembroI = Integer.parseInt(n_miembroS);
+        
+            existe = c.existeIdCliente(n_miembroI);
+        
+        }while(!existe); //Repetimos el bucle mientras no exista el cliente
+        
+        // Si el miembro tiene motos:
+        if(c.getN_motosMiembro(n_miembroI) > 0)
+        {
+            System.out.println("---Motos que posee el miembro---");
+            mostrar_clientes(c.getArrayClientes()); // Mostramos el cliente con sus motos.
+            
+            System.out.println("El miembro posee "+ c.getN_motosMiembro(n_miembroI)+ " moto/s.");
+            System.out.println("Por lo tanto, esta/s moto/s debe/n asignarse a otro/s miembro/s.");
+            
+            // Introducimos en el array motos_cliente las motos que posee el cliente.
+            motos_cliente = m.MotosPoseeCliente(n_miembroI);
+            
+         for(int i=0; i< motos_cliente.size(); i++) 
+         {
+             // Creamos una nueva cesión:
+             Cesion ces = new Cesion();
+
+             idmotoc = motos_cliente.get(i); // cogemos la moto que posee el cliente que se va borrar
+             System.out.println("Cesión de la moto con id "+idmotoc+": \n");
+            
+             System.out.println("---Miembros registrados---");
+             mostrar_Array(c.getArrayClientes());
+          do
+          { 
+            do
+            {        
+               do //Seleccionamos el miembro al que deseamos ceder la moto
+               {
+                  System.out.println("Introduzca el id del miembro al que desea ceder la moto: ");
+                  miembro_selecS = teclado.next();
+            
+                  correcto = c.comprobarNumero(miembro_selecS);
+                
+               }while(!correcto);
+                
+               miembro_selecI = Integer.parseInt(miembro_selecS);
+               
+               // Comprobamos que el miembro seleccionado existe
+               existe = c.existeIdCliente(miembro_selecI);
+
+             }while(!existe); // Repetimos el bucle mientras no exista el miembro.
+         
+             if(n_miembroI == miembro_selecI)
+             {
+                 System.out.println("Acción inválida: el socio al que se quiere ceder la moto es ");
+                 System.out.println("el mismo que el que cede la moto. ");
+                 opcorrecta=false;
+             }
+            else
+            {
+                // Guardamos el id del miembro al que se le va a ceder la moto
+                ces.setSocioCedeMoto(miembro_selecI); 
+                
+                // comprobamos que la posesión no sobrepasa el importe máximo marcado.
+                opcorrecta = ces.comprobarCosteClienteMoto(miembro_selecI,ces.getCosteMoto(idmotoc),importeF);
+            }
+           
+             
+          }while(!opcorrecta); // Si la posesión de motos de dicho cliente sobrepasa el coste repetimos
+                               // el bucle para seleccionar otro cliente
+          
+            // Guardamos el miembro que ha cedido la moto (el que se va a ir)
+            ces.setSocioPoseeMoto(n_miembroI);
+           
+            // Incrementamos en 1 el número de motos que posee el cliente al que se le cede la moto
+            ces.actualizaMotosPosee(miembro_selecI,"inc");
+			
+            // Guardamos el id de la moto que se va a ceder
+            ces.setId_moto(idmotoc);
+            
+            // En el id de la moto que se va a ceder se debe modificar el idcliente al selecionado
+            ces.setIdClienteMoto(idmotoc, miembro_selecI);
+			
+            // Introducimos la fecha en la que se va a realizar la sesión
+            // (fecha actual en la que se realiza la cesión)
+            Date fecha = new Date();
+            System.out.println("Fecha y hora de la cesión: \n"+fecha);
+            ces.setFecha(fecha);
+  
+            // Incrementamos idcesión
+            id_cesion++;
+            ces.setId_cesion(id_cesion);
+            
+            // Añadimos los datos de la cesión al array Cesión:
+            ces.introducirCesion(ces);
+        
+            System.out.println("\nLa cesión de la moto con id " + idmotoc +  " se ha realizado correctamente.");
+         
+         } // Repetimos el for hasta que se hayan asignado todas las motos.
+          
+        }//fin del if (si tiene motos)
+        
+       
+        // En este punto, las motos que poseía el miembro han sido cedidas correctamente
+        // a otros miembros; ahora podemos borrar correctamente el socio del array clientes.
+        
+        c.EliminarMiembro(n_miembroI);
+        num_socios--;
+        
+        System.out.println("El miembro se ha eliminado correctamente.");
+        
+        return c;     
+    }
+    
+    /************************************************************************
+     * Insertamos el importe de una moto
+     * 
+     * @return      Devolvemos la información de la moto.
+     */
+    public static Moto insertar_importe_moto()
+    {
+        String idmotoS, importeS;
+        int idmotoI;
+        float coste_act_m, importeF;
+        
+        Moto m = new Moto();
+        System.out.println("---Motos registradas---");
+        mostrar_Array(m.getArrayMotos());
+        
+        do
+        {
+            System.out.println("Seleccione el id de una moto: ");
+            idmotoS = teclado.next();
+            
+            correcto = m.comprobarNumero(idmotoS);
+            
+        }while(!correcto);
+        
+         idmotoI = Integer.parseInt(idmotoS);
+        
+         // Obtenemos el coste actual de la moto
+        coste_act_m = m.getCosteMoto(idmotoI);
+        
+        do
+        {
+            System.out.println("Importe adicional: ");
+            importeS = teclado.next();
+            
+            // Comprueba que el importe introducido por teclado es correcto
+            correcto = m.comprobarImporte(importeS);
+            
+        }while(!correcto);
+    
+        // Actualizamos el importe Adicional que posee la moto
+        importeF = Float.parseFloat(importeS);
+        
+        m.ActualizarImporteAdicional(idmotoI,importeF);
+        
+        // Actualizamos el importe total que tiene la moto (coste + importeAdicional)  
+         m.ActualizarImporteTotal(idmotoI,m.getImporteAdicionalMoto(idmotoI),coste_act_m);
+         
+        return m;
     }
    
     /**

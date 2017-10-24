@@ -584,4 +584,76 @@ public class Moto extends Cliente {
              }    
          }          
     }
+    /**
+    * Método que vuelca en un array los id de las motos que posee el cliente
+    * que se la pasa por parametro.
+    * 
+    * @param idmiembro número de socio.
+    * 
+    * @return ArrayList : el id de las motos que posee el cliente.
+    */
+    public ArrayList<Integer> MotosPoseeCliente(int idmiembro)
+    {
+         ArrayList<Integer> motos_cliente = new ArrayList<Integer>();
+         int j=0;
+         
+         for(int i=0; i< array_motos.size(); i++) 
+         {
+             if(array_motos.get(i).getNum_socio()== idmiembro)
+             { 
+                 // Vamos introduciendo en el array todas las motos que posee dicho cliente.
+                motos_cliente.add(array_motos.get(i).getId_moto());
+                j++;
+             }
+         }
+             
+        return motos_cliente;
+
+    }
+     /**
+     * Método que comprueba que en la cesión que se va a producir, el cliente no 
+     * sobrepasalos 6000 euros. 
+     * 
+     * @param id_cliente        id del cliente
+     * @param costeM_actual     coste actual de la moto.
+     * @return                  true si al buscar en el array de motos el cliente
+     *                          existe, asi obtenemos el precio de las motos.
+     *                          false, si al buscar en el array de motos el cliente
+     *                          no existe, no podremos obtener el precio de las motos
+     *                          y por tanto el precio supera los 6000.
+     */
+   public boolean comprobarCosteClienteMoto(int id_cliente, float costeM_actual, float importe)
+   {
+       float precioMotos=0;
+       
+       // Buscamos en el array de motos el cliente introducido (id_cliente)
+       for(int i=0; i< array_motos.size(); i++) 
+         {
+             // Si lo encontramos, obtenemos el precio de las motos
+             // que tiene en su poder:
+             if(array_motos.get(i).getNum_socio() == id_cliente)
+                    precioMotos = array_motos.get(i).getCoste() + precioMotos; 
+         }
+       
+            // Sumamos el coste de la moto actual a las motos que ya posee el cliente.
+            precioMotos = costeM_actual + precioMotos;
+            // Si el precio sobrepasa el importe se devuelve una advertencia.
+            if(precioMotos > importe)
+            {
+                correcto = false;
+                System.out.println("Este cliente no puede tener la moto en su posesión");
+                System.out.println("(sobrepasa los "+importe+" euros)");
+            }
+            // Si el precio no sobrepasa los 1000 euros
+            else
+            {
+                correcto = true;
+              
+               // actualizar el precio de las motos en posesión
+                actualizaImporte(id_cliente, precioMotos);
+                   
+            }
+            
+       return correcto;
+   }
 }

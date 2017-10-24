@@ -26,9 +26,11 @@ public class Cliente {
     boolean correcto;
     
     // Expresiones regulares
+    String patron_num = "[0-9]+";
     String patron_nom = "[A-Z]+[A-Za-z ]+";
     String patron_importe = "[1-9][0-9]*(.[0-9]+){0,1}";
     
+    Pattern pnum = Pattern.compile(patron_num);
     Pattern pn = Pattern.compile(patron_nom); 
     Pattern pi = Pattern.compile(patron_importe);
     
@@ -359,5 +361,92 @@ public class Cliente {
         return correcto;
         
     }
-    
+    /**
+     * Método que comprueba que la opción introducida por teclado sea un número
+     * (Mira si la expresión regular se cumple)
+     * 
+     * @param numero    Numero de la moto
+     * @return          true si el numero es valido.
+     *                  false si no introducimos un numero y por tanto se pide
+     *                  volver a introducir un numero.
+     */
+    public boolean comprobarNumero(String numero)
+    {
+        matcher = pnum.matcher(numero); 
+        
+            if(!matcher.matches())
+            {
+               correcto = false; 
+               System.out.println("Opción invalida. Debe introducir un número.");                  
+            }
+            else
+               correcto = true;
+
+        return correcto;  
+    }
+     /**
+    * Método que determina si el miembro que se le pasa por parametro existe o no
+    * en el array clientes.
+    * 
+    * @param idcliente   número del socio que se le pasa para saber si existe.
+    * 
+    * @return true si el id del cliente existe en el array clientes, false si no.
+    */
+    public boolean existeIdCliente(int idcliente)
+    {
+        correcto=false;
+        
+         for(int i=0; i< array_clientes.size(); i++) 
+         {
+             if(array_clientes.get(i).getNum_socio() == idcliente)
+             {
+                 correcto = true;
+                 break;
+             }
+             
+         }
+         
+         if(!correcto)
+              System.out.println("El Id introducido no existe, por favor vuelva a intentarlo.");
+        
+        return correcto;
+    }
+    /**
+    * Método que elimina el miembro que se le pasa por parametro.
+    * 
+    * @param idmiembro   número de miembro que se quiere eliminar
+    */
+    public void EliminarMiembro(int idmiembro)
+    {
+         for(int i=0; i< array_clientes.size(); i++) 
+         {
+             if(array_clientes.get(i).getNum_socio() == idmiembro)
+             {
+                // Borramos al miembro
+                 array_clientes.remove(i);
+             }
+         }  
+        
+    }
+    /**
+    * Método que determina el número de motos que tiene un cliente.
+    * 
+    * @param idmiembro   numero de socio.
+    * 
+    * @return número entero (cantidad de motos que tiene el cliente)
+    */
+    public int getN_motosMiembro(int idmiembro)
+    {
+        int nmotos=0;
+        
+         for(int i=0; i< array_clientes.size(); i++) 
+        {
+             if(array_clientes.get(i).getNum_socio() == idmiembro)
+             { 
+                 nmotos = array_clientes.get(i).getN_motos();             
+             
+             }
+        }     
+         return nmotos;
+    }
 }
