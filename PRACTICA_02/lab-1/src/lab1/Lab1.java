@@ -39,6 +39,8 @@ public class Lab1 {
     private static float importeF;
     private static int num_motos_reg;
     private static int num_socios;
+    private static int num_cesiones;
+    private static ArrayList<Integer> array_mas_cesiones = new ArrayList<Integer>();
        
     public static void main(String[] args) throws ParseException {
         // TODO code application logic here
@@ -77,10 +79,11 @@ public class Lab1 {
         System.out.println("3. Registrar una cesion ");
         System.out.println("4. Eliminar un miembro ");
         System.out.println("5. Incrementar otros gastos a una moto");
-        System.out.println("6. Listar en pantalla los miembros con motos en posesión ");
-        System.out.println("7. Listar todas las motos");
-        System.out.println("8. Listar todas las cesiones realizadas");
-        System.out.println("9. Salir");
+        System.out.println("6. Miembros con más cesiones");
+        System.out.println("7. Listar en pantalla los miembros con motos en posesión ");
+        System.out.println("8. Listar todas las motos");
+        System.out.println("9. Listar todas las cesiones realizadas");
+        System.out.println("10. Salir");
 
        do{
             
@@ -152,19 +155,28 @@ public class Lab1 {
                        }
                    
                 break;
-                case 6:        
+               case 6:
+                    if(num_cesiones > 0)
+                    {
+                        System.out.println("---Clientes con más cesiones---");
+                        clientes_max_cesiones();
+                    }
+                    else 
+                        System.out.println("No hay cesiones registradas.");                     
+                break;
+                case 7:        
                     System.out.println("---Clientes registrados---\n");
                     mostrar_clientes(c.getArrayClientes());
                 break;
-                case 7:
+                case 8:
                     System.out.println("---Motos registradas---\n");
                     mostrar_Array(m.getArrayMotos());
                 break;
-                case 8:
+                case 9:
                     System.out.println("---Cesiones registradas---\n");
                     mostrar_Array(ces.getArrayCesion());
                 break;
-                case 9:
+                case 10:
                    salir(c,m,ces);
                 break;
                 default: //Si se introduce cualquier otro número que no esté entre el 1 y el 7:
@@ -183,9 +195,68 @@ public class Lab1 {
          }         
        
         }
-        while(opcion != 9);     
+        while(opcion != 10);     
         
     }
+    
+    /**
+     * void clientes_max_cesiones()
+     * Función que llama a las funciones clienteConMasCesiones() para poder
+     * obtener el máximo número de cesiones recibidas realizadas a un cliente y
+     * ClientesMasCesiones() para poder visualizar todos los clientes con ese
+     * mismo número de cesiones recibidas (por si existiera más de un cliente
+     * con el mismo número de cesiones recibidas máximo).
+     *    
+     */
+    public static void clientes_max_cesiones()
+    {
+        Cliente c = new Cliente();
+        ArrayList<Integer> array_max_cesiones = new ArrayList<>();
+        int mas_cesiones=0;
+        
+        // Obtenemos el valor de cliente que más cesiones tiene
+        mas_cesiones = c.clienteConMasCesiones();
+        
+        System.out.println("Número máximo de cesiones recibidas realizadas: "+mas_cesiones+"\n");
+        
+        // Segun el valor mostramos todos los cientes con más cesiones
+        ClientesMasCesiones(mas_cesiones);
+     
+        
+    }
+    
+    /**
+     * void ClientesMasCesiones()
+     * Función que selecciona el cliente con más cesiones y luego
+     * llama a las funciones correspondientes para poder mostrar el
+     * cliente por pantalla y todas las cesiones de motos recibidas.
+     * 
+     * @param mas_cesiones número máximo de cesiones recibidas
+     * 
+     */
+    static public void ClientesMasCesiones(int mas_cesiones)
+    {
+        Cliente c = new Cliente();
+        Cesion ces = new Cesion();
+        ArrayList<Cliente> array_clientes = new ArrayList<>();
+        ArrayList<Cesion> array_cesiones = new ArrayList<>();
+        array_clientes = c.getArrayClientes();
+        array_cesiones = ces.getArrayCesion();
+        int id_cliente=0;
+        
+        for(int i=0; i< array_clientes.size(); i++) 
+         { 
+             if(array_clientes.get(i).getNumCesionesCliente() == mas_cesiones)
+             {
+                 mostrar_cliente(array_clientes.get(i).getNum_socio(),array_clientes);
+                 mostrar_cesiones_cliente(array_clientes.get(i).getNum_socio(),array_cesiones);
+                 System.out.println("\n");
+             }
+         }
+        
+        
+    }
+    
     /*************************************************************
      * Eliminamos a un miembro.
      * 
@@ -749,6 +820,53 @@ public class Lab1 {
              System.out.println(array_cliente.get(i));  
              m.mostrarMotosCliente(array_cliente.get(i).getNum_socio());
          }
+    }
+    
+     /**
+     * Esta función nos permite mostrar todas las cesiones que ha recibido el cliente
+     * que se le pasa por parámetro.
+     * 
+     * @param idcliente
+     * @param array_cesiones
+     * 
+     */
+    public static void mostrar_cesiones_cliente(int idcliente,ArrayList<Cesion> array_cesiones)
+    {
+         
+        for(int i=0; i< array_cesiones.size(); i++) 
+         {       
+             if(array_cesiones.get(i).getSocioCedeMoto() == idcliente)
+             {
+                  System.out.println(array_cesiones.get(i));
+                 
+             }
+         }
+        
+        
+    }
+    
+    /**
+     * Esta función nos muestra la información de un solo cliente (el que
+     * se le pasa por parámetro).
+     * 
+     * @param idcliente
+     * @param array_cliente
+     * 
+     */
+    public static void mostrar_cliente(int idcliente, ArrayList<Cliente> array_cliente)
+    {  
+        Moto m = new Moto();
+
+        for(int i=0; i< array_cliente.size(); i++) 
+         {
+             if(array_cliente.get(i).getNum_socio() == idcliente)
+             {
+                System.out.println(array_cliente.get(i));  
+               
+                  // m.mostrarMotosCliente(array_cliente.get(i).getNum_socio());
+             }
+         }
+        
     }
     
     /**
