@@ -73,10 +73,11 @@ public class Lab1 {
         System.out.println("1. Registrar un nuevo miembro");
         System.out.println("2. Registrar una nueva motocicleta");
         System.out.println("3. Registrar una cesion ");
-        System.out.println("4. Listar en pantalla los miembros con motos en posesión ");
-        System.out.println("5. Listar todas las motos");
-        System.out.println("6. Listar todas las cesiones realizadas");
-        System.out.println("7. Salir");
+        System.out.println("4. Incrementar otros gastos a una moto");
+        System.out.println("5. Listar en pantalla los miembros con motos en posesión ");
+        System.out.println("6. Listar todas las motos");
+        System.out.println("7. Listar todas las cesiones realizadas");
+        System.out.println("8. Salir");
 
        do{
             
@@ -131,6 +132,10 @@ public class Lab1 {
                     mostrar_Array(ces.getArrayCesion());
                 break;
                 case 7:
+                    System.out.println("---Cesiones registradas---\n");
+                    mostrar_Array(ces.getArrayCesion());
+                break;
+                case 8:
                    salir(c,m,ces);
                 break;
                 default: //Si se introduce cualquier otro número que no esté entre el 1 y el 7:
@@ -149,7 +154,7 @@ public class Lab1 {
          }         
        
         }
-        while(opcion != 7);     
+        while(opcion != 8);     
         
     }
    

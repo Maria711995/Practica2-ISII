@@ -22,6 +22,8 @@ public class Moto extends Cliente {
     private String nombre_m;
     private String cent_cub;
     private float coste;
+    private float importe_adicional;
+    private float importe_total;
     boolean correcto;
     
     private static ArrayList<Moto> array_motos = new ArrayList<>();
@@ -472,4 +474,114 @@ public class Moto extends Cliente {
                  System.out.println("\t"+array_motos.get(i));     
          }          
    } 
+    
+    /*******************************************************
+     * Esta función devuelve el importe adicional
+     * 
+     * @param importe_adicional     Importe extra que tiene
+     *                              la moto.
+     */
+    public void setImporteAdicional(float importe_adicional)
+    {
+        this.importe_adicional = importe_adicional;
+    }
+    /*****************************************************
+     * Esta función devuelve el importe adicional.
+     * 
+     * @return      El importe adicional de la moto.
+     */
+    public float getImporteAdicional()
+    {
+        return this.importe_adicional;
+    }
+     /*****************************************************
+     * Esta función devuelve el importe adicional.
+     * 
+     * @param idmoto    Le pasamos el id de la moto para 
+     *                  saber que importe pertenece a la moto.
+     * @return          El importe adicional de la moto.
+     */
+    public float getImporteAdicionalMoto(int idmoto)
+    {
+        float importe_adicional=0;
+        
+        for(int i=0; i< array_motos.size(); i++) 
+         {
+             if(array_motos.get(i).getId_moto()== idmoto)
+             {               
+                 importe_adicional = array_motos.get(i).getImporteAdicional();                
+             }    
+         }  
+        
+        return importe_adicional;
+    }
+    
+    /************************************************************
+     * Actualiza el importe adicional de la moto
+     * 
+     * @param idmoto                Le pasamos el id de la moto.
+     * @param importe_adicional     Le pasamos el importe adicional
+     */
+    public void ActualizarImporteAdicional(int idmoto, float importe_adicional)
+    {
+        float importe_total, importe_actual;
+        
+        for(int i=0; i< array_motos.size(); i++) 
+         {
+             if(array_motos.get(i).getId_moto()== idmoto)
+             {
+                 // Obtenemos el "importe adicional" que tiene actualmente la moto
+                 importe_actual =  array_motos.get(i).getImporteAdicional();
+                 
+                 // Calculamos el "importe adicional" total (importe actual + introducido)
+                 importe_total = importe_actual + importe_adicional;
+                 
+                 // Guardamos los datos
+                 array_motos.get(i).setImporteAdicional(importe_total);
+             }    
+         }   
+    }
+    
+    /*************************************************************
+     * Devuelve el importe total, es decir, el importe de la moto
+     * más el importe adicional
+     * 
+     * @return      El importe total de la moto.
+     */
+    public float getImporteTotal()
+    {
+        return this.importe_total;
+    }
+    
+    /**********************************************************
+     * Calcula el importe total de la moto.
+     * 
+     * @param importetotal  Importe total de la moto.
+     */
+    public void setImporteTotal(float importetotal)
+    {            
+        this.importe_total = importetotal;
+    }
+    
+    /*****************************************************************
+     * Actualizamos el importe total de la moto
+     * 
+     * @param idmoto                ID de la moto a la que actualizar
+     *                              el importe.
+     * @param coste_moto            Coste de la moto.
+     * @param importe_adicional     Importe adicional.
+     */
+    public void ActualizarImporteTotal(int idmoto, float coste_moto, float importe_adicional)
+    {
+        float total=0;
+        
+        for(int i=0; i< array_motos.size(); i++) 
+         {
+             if(array_motos.get(i).getId_moto()== idmoto)
+             {               
+                 total =  coste_moto + importe_adicional;            
+                 array_motos.get(i).setImporteTotal(total);  
+             }    
+         }          
+    }
 }
