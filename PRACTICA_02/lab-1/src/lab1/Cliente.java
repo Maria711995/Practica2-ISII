@@ -333,5 +333,31 @@ public class Cliente {
          }     
     }
     
+     /***********************************************************************
+     * Esta función comprueba el importe
+     * 
+     * @param importe   Le pasamos el importe que deseamos que el cliente
+     *                  tenga.
+     * @return          Devuelve true si el importe introducido es correcto.
+     *                  False en caso de que no sea correcto.
+     */
+    public boolean comprobarImporte(String importe)
+    {
+        
+         matcher = pi.matcher(importe);
+               
+           if(!matcher.matches())
+           {
+               System.out.println("Importe no válido, por favor vuelva a intentarlo.");
+               correcto = false;          
+           }
+           else
+           {
+               correcto = true;                  
+           }
+               
+        return correcto;
+        
+    }
     
 }

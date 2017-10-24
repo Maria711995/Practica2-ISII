@@ -36,7 +36,8 @@ public class Lab1 {
     private static boolean correcto;    
     private static PrintWriter pw = null;
     private static ArrayList<?> array = new ArrayList<>();
-    
+    private static float importeF;
+       
     public static void main(String[] args) throws ParseException {
         // TODO code application logic here
         menu();
@@ -55,6 +56,18 @@ public class Lab1 {
         Moto m = new Moto();
         Cliente c = new Cliente();
         Cesion ces = new Cesion();
+        String importeS;
+        
+        do
+        {
+            System.out.println("Introduzca el importe: ");
+            importeS = teclado.next();     
+        
+            correcto = c.comprobarImporte(importeS);
+                     
+        }while(!correcto);
+        
+        importeF = Float.parseFloat(importeS);
         
         System.out.println("------------------- MENU -------------------------------");
         System.out.println("1. Registrar un nuevo miembro");
