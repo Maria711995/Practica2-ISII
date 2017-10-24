@@ -1,0 +1,9 @@
+---Clientes registrados---
+ 001       PEPE   1000,000€   01
+	 002 99999TTT               MTOO   50cc   1000,000€   001
+ 002       Juan   6000,000€   02
+	 001 11122PPP               MOTO   50cc   5000,000€   002
+	 003 55555YYY             MOTOOO   40cc   1000,000€   002
+
+---Cesiones registradas---
+ 001   Moto 001    Wed Oct 18 13:09:10 CEST 2017   Socio 001 cede a socio 002
